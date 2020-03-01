@@ -21,19 +21,25 @@ namespace WebApi.Controllers
         public IQueryable<ProductDto> Get()
         {
             return from p in db.Products
+                   orderby p.ProductID
                    select new ProductDto
                    {
                        ProductID = p.ProductID,
-                       ProductName = p.ProductName
+                       ProductName = p.ProductName,
+                       QuantityPerUnit = p.QuantityPerUnit,
+                       UnitPrice = p.UnitPrice,
+                       UnitsInStock = p.UnitsInStock,
+                       UnitsOnOrder = p.UnitsOnOrder,
+                       ReorderLevel = p.ReorderLevel,
+                       Discontinued = p.Discontinued
                    };
         }
 
         // GET: api/Products/5
-        [ResponseType(typeof(Product))]
+        [ResponseType(typeof(ProductDto))]
         public async Task<IHttpActionResult> Get(int id)
         {
-            var products = this.Get();  
-            var product = await products.SingleOrDefaultAsync(x => x.ProductID == id);
+            var product = await this.Get().SingleOrDefaultAsync(x => x.ProductID == id);
             if (product == null)
             {
                 return NotFound();
@@ -43,7 +49,7 @@ namespace WebApi.Controllers
 
         // PUT: api/Products/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutProduct(int id, Product product)
+        public async Task<IHttpActionResult> Put(int id, Product product)
         {
             if (!ModelState.IsValid)
             {
@@ -77,8 +83,8 @@ namespace WebApi.Controllers
         }
 
         // POST: api/Products
-        [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> PostProduct(Product product)
+        [ResponseType(typeof(ProductDto))]
+        public async Task<IHttpActionResult> Post(Product product)
         {
             if (!ModelState.IsValid)
             {
@@ -88,12 +94,23 @@ namespace WebApi.Controllers
             db.Products.Add(product);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = product.ProductID }, product);
+            var dto = new ProductDto
+            {
+                ProductID = product.ProductID,
+                ProductName = product.ProductName,
+                QuantityPerUnit = product.QuantityPerUnit,
+                UnitPrice = product.UnitPrice,
+                UnitsInStock = product.UnitsInStock,
+                UnitsOnOrder = product.UnitsOnOrder,
+                ReorderLevel = product.ReorderLevel,
+                Discontinued = product.Discontinued
+            };
+            return CreatedAtRoute("DefaultApi", new { id = product.ProductID }, dto);
         }
 
         // DELETE: api/Products/5
         [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> DeleteProduct(int id)
+        public async Task<IHttpActionResult> Delete(int id)
         {
             Product product = await db.Products.FindAsync(id);
             if (product == null)

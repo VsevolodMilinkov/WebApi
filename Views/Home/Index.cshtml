@@ -1,70 +1,91 @@
-﻿<div>
-    <h2>All Products</h2>
-    <ul id="products" />
-</div>
-<div>
-    <h2>Search by ID</h2>
-    <input type="text" id="prodId" size="5" />
-    <input type="button" value="Search" onclick="find();" />
-    <p id="product" />
-</div>
+﻿@section scripts{
+    @Scripts.Render("~/bundles/app")
+}
 
-<script>
-    var uri = 'api/products';
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        Товары
+                    </h2>
+                </div>
+                <div class="panel-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>ID</td>
+                                <td>Название</td>
+                                <td>Кол-во единиц товара в партии</td>
+                                <td>Цена (шт.)</td>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: products">
+                            <tr>
+                                <td><span data-bind="text: ProductID"></span></td>
+                                <td style="padding:0px 5px;"><strong><span data-bind="text: ProductName"></span></strong></td>
+                                <td><span data-bind="text: QuantityPerUnit"></span></td>
+                                <td>$<span data-bind="text: UnitPrice"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="alert alert-danger" data-bind="visible: error">
+                <p data-bind="text: error"></p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <form class="form-inline" data-bind="submit: getProduct">
+                    <label for="inputProductId">ID</label>
+                    <input id="inputProductId"type="number" size="5" />
+                    <button type="submit">Найти товар по ID</button>
+                </form>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        Добавить товар
+                    </h2>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" data-bind="submit: addProduct">
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="inputProductName">Название</label>
+                            <input class="form-control col-md-6" id="inputProductName" data-bind="value: newProduct.ProductName" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="inputQuantityPerUnit">Кол-во единиц товара в партии</label>
+                            <input class="form-control col-md-6" id="inputQuantityPerUnit" data-bind="value: newProduct.QuantityPerUnit" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="inputUnitPrice">Цена (шт.)</label>
+                            <input type="number" class="form-control col-md-6" id="inputUnitPrice" data-bind="value: newProduct.UnitPrice" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="inputUnitsInStock">Кол-во партий товара на складе</label>
+                            <input type="number" class="form-control col-md-6" id="inputUnitsInStock" data-bind="value: newProduct.UnitsInStock" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="inputUnitsOnOrder">Кол-во заказанных партий товара</label>
+                            <input type="number" class="form-control col-md-6" id="inputUnitsOnOrder" data-bind="value: newProduct.UnitsOnOrder" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="inputReorderLevel">Уровень дозакупки товара (в шт.)</label>
+                            <input class="form-control col-md-6" id="inputReorderLevel" data-bind="value: newProduct.ReorderLevel" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="inputDiscontinued">Снят с производства?</label>
+                            <input type="checkbox" class="form-control col-md-6" id="inputDiscontinued" data-bind="value: newProduct.Discontinued" />
+                        </div>
+                        <button type="submit" class="btn btn-default">Добавить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    $(document).ready(function () {
-        // Send an AJAX request
-        $.getJSON(uri)
-            .done(function (data) {
-                // On success, 'data' contains a list of products.
-                $.each(data, function (key, item) {
-                    // Add a list item for the product.
-                    $('<li>', { text: formatItem(item) }).appendTo($('#products'));
-                });
-            });
-    });
-
-    function find() {
-        var id = $('#prodId').val();
-        $.getJSON(uri + '/' + id)
-            .done(function (data) {
-                $('#product').text(formatItem(data));
-            })
-            .fail(function (jqXHR, textStatus, err) {
-                $('#product').text('Error: ' + err);
-            });
-    }
-
-    function formatItem(item) {
-        return item.ProductID + ' - ' + item.ProductName;
-    }
-</script>
-
-
-
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
-            a broad range of clients, including browsers and mobile devices. ASP.NET Web API
-            is an ideal platform for building RESTful applications on the .NET Framework.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301870">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301871">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
-    </div>
+
 </div>
