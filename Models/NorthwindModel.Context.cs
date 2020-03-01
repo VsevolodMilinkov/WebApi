@@ -13,10 +13,10 @@ namespace WebApi.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class NorthwindEntities1 : DbContext
+    public partial class NorthwindEntities : DbContext
     {
-        public NorthwindEntities1()
-            : base("name=NorthwindEntities1")
+        public NorthwindEntities()
+            : base("name=NorthwindEntities")
         {
         }
     
