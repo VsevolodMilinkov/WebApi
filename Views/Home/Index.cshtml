@@ -1,90 +1,117 @@
 ﻿@section scripts{
     @Scripts.Render("~/bundles/app")
 }
+<div class="alert alert-danger alert-dismissible fade" role="alert" data-bind="visible: error">
+    <p data-bind="text: error"></p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="alert alert-success alert-dismissible fade" role="alert" data-bind="visible: success">
+    <p data-bind="text: success"></p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<!-- ko if:productInfo() -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form-horizontal" data-bind="submit: editProduct">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel" data-bind="text: panelTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h2 class="panel-title">
-                        Товары
-                    </h2>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="inputProductName">Название</label>
+                        <input class="form-control col-md-6 form-control-sm" id="inputProductName" data-bind="value: productInfo().ProductName" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="inputQuantityPerUnit">Кол-во единиц товара в партии</label>
+                        <input class="form-control col-md-6 form-control-sm" id="inputQuantityPerUnit" data-bind="value:productInfo().QuantityPerUnit" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="inputUnitPrice">Цена (парт.)</label>
+                        <input type="number" class="form-control col-md-6 form-control-sm" id="inputUnitPrice" data-bind="value: productInfo().UnitPrice" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="inputUnitsInStock">Кол-во партий товара на складе</label>
+                        <input type="number" class="form-control col-md-6 form-control-sm" id="inputUnitsInStock" data-bind="value: productInfo().UnitsInStock" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="inputUnitsOnOrder">Кол-во заказанных партий товара</label>
+                        <input type="number" class="form-control col-md-6 form-control-sm" id="inputUnitsOnOrder" data-bind="value: productInfo().UnitsOnOrder" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="inputReorderLevel">Уровень дозакупки товара (в парт.)</label>
+                        <input class="form-control col-md-6 form-control-sm" id="inputReorderLevel" data-bind="value: productInfo().ReorderLevel" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="inputDiscontinued">Снят с производства?</label>
+                        <input type="checkbox" class="form-control col-md-6 form-control-sm" id="inputDiscontinued" data-bind="checked: productInfo().Discontinued" />
+                    </div>
+
                 </div>
-                <div class="panel-body">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>ID</td>
-                                <td>Название</td>
-                                <td>Кол-во единиц товара в партии</td>
-                                <td>Цена (шт.)</td>
-                            </tr>
-                        </thead>
-                        <tbody data-bind="foreach: products">
-                            <tr>
-                                <td><span data-bind="text: ProductID"></span></td>
-                                <td style="padding:0px 5px;"><strong><span data-bind="text: ProductName"></span></strong></td>
-                                <td><span data-bind="text: QuantityPerUnit"></span></td>
-                                <td>$<span data-bind="text: UnitPrice"></span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-bind="text: panelButton"></button>
                 </div>
-            </div>
-            <div class="alert alert-danger" data-bind="visible: error">
-                <p data-bind="text: error"></p>
-            </div>
+            </form>
         </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
+    </div>
+</div>
+<!-- /ko -->
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    Найти товар
+                </h2>
+            </div>
+            <div class="panel-body">
                 <form class="form-inline" data-bind="submit: getProduct">
                     <label for="inputProductId">ID</label>
-                    <input id="inputProductId"type="number" size="5" />
+                    <input id="inputProductId" type="number" size="5" />
                     <button type="submit">Найти товар по ID</button>
                 </form>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h2 class="panel-title">
-                        Добавить товар
-                    </h2>
-                </div>
-                <div class="panel-body">
-                    <form class="form-horizontal" data-bind="submit: addProduct">
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="inputProductName">Название</label>
-                            <input class="form-control col-md-6" id="inputProductName" data-bind="value: newProduct.ProductName" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="inputQuantityPerUnit">Кол-во единиц товара в партии</label>
-                            <input class="form-control col-md-6" id="inputQuantityPerUnit" data-bind="value: newProduct.QuantityPerUnit" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="inputUnitPrice">Цена (шт.)</label>
-                            <input type="number" class="form-control col-md-6" id="inputUnitPrice" data-bind="value: newProduct.UnitPrice" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="inputUnitsInStock">Кол-во партий товара на складе</label>
-                            <input type="number" class="form-control col-md-6" id="inputUnitsInStock" data-bind="value: newProduct.UnitsInStock" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="inputUnitsOnOrder">Кол-во заказанных партий товара</label>
-                            <input type="number" class="form-control col-md-6" id="inputUnitsOnOrder" data-bind="value: newProduct.UnitsOnOrder" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="inputReorderLevel">Уровень дозакупки товара (в шт.)</label>
-                            <input class="form-control col-md-6" id="inputReorderLevel" data-bind="value: newProduct.ReorderLevel" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="inputDiscontinued">Снят с производства?</label>
-                            <input type="checkbox" class="form-control col-md-6" id="inputDiscontinued" data-bind="value: newProduct.Discontinued" />
-                        </div>
-                        <button type="submit" class="btn btn-default">Добавить</button>
-                    </form>
-                </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    Товары
+                </h2>
+                <div class="spinner-border"></div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>ID</td>
+                            <td>Название</td>
+                            <td>Кол-во единиц товара в партии</td>
+                            <td>Цена (шт.)</td>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: products">
+                        <tr>
+                            <td><span data-bind="text: ProductID"></span></td>
+                            <td><strong><span data-bind="text: ProductName"></span></strong></td>
+                            <td><span data-bind="text: QuantityPerUnit"></span></td>
+                            <td>$<span data-bind="text: UnitPrice"></span></td>
+                            <td><button title="Редактировать" data-bind="click: $parent.initEditProduct" data-toggle="modal" data-target="#exampleModal"><span class="glyphicon glyphicon-pencil"></span></button></td>
+                            <td><button title="Удалить" data-bind="click: $parent.deleteProduct"><span class="glyphicon glyphicon-remove"></span></button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
 
 <div class="row">
 
