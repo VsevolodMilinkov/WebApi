@@ -1,13 +1,13 @@
 ﻿@section scripts{
     @Scripts.Render("~/bundles/app")
 }
-<div class="alert alert-danger alert-dismissible fade" role="alert" data-bind="visible: error">
+<div class="alert alert-danger alert-dismissible" role="alert" data-bind="visible: error">
     <p data-bind="text: error"></p>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="alert alert-success alert-dismissible fade" role="alert" data-bind="visible: success">
+<div class="alert alert-success alert-dismissible" role="alert" data-bind="visible: success">
     <p data-bind="text: success"></p>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -66,11 +66,12 @@
 <!-- /ko -->
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
-                <h2 class="panel-title">
-                    Найти товар
-                </h2>
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default">Добавить товар</button>
+                    <button type="button" class="btn btn-default">Найти</button>
+                </div>
             </div>
             <div class="panel-body">
                 <form class="form-inline" data-bind="submit: getProduct">

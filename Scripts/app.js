@@ -45,7 +45,7 @@
             self.products(data);
         });
     }
-    /*self.addProduct = function (formElement) {
+    self.addProduct = function (formElement) {
         self.panelTitle("Добавить товар");
         self.panelButton("Добавить");
         var product = {
@@ -62,7 +62,7 @@
             self.success('Товар "'+product.ProductName+'" добавлен.');
 
         });
-    }*/
+    }
     // редактирование записи
     self.productInfo = ko.observable();
     self.initEditProduct = function (item) {

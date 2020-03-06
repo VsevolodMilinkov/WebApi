@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace WebApi.Models
+﻿namespace WebApi.Models
 {
     public class ProductDto
     {
@@ -15,5 +10,6 @@ namespace WebApi.Models
         public short? UnitsOnOrder;
         public short? ReorderLevel;
         public bool Discontinued;
+             
     }
 }
