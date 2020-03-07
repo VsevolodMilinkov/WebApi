@@ -34,13 +34,12 @@ namespace WebApi.Controllers
 
         // PUT: api/Products/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult Put(int id, Product product)
+        public IHttpActionResult Put(int id, ProductDto product)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
             if (id != product.ProductID)
             {
                 return BadRequest();
@@ -66,17 +65,15 @@ namespace WebApi.Controllers
 
         // POST: api/Products
         [ResponseType(typeof(ProductDto))]
-        public IHttpActionResult Post(Product product)
+        public IHttpActionResult Post(ProductDto product)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            repo.Post(ref product);
 
-            repo.Post(product);
-
-            var dto = this.Get();
-            return CreatedAtRoute("DefaultApi", new { id = product.ProductID }, dto);
+            return CreatedAtRoute("DefaultApi", new { id = product.ProductID }, product);
         }
 
         // DELETE: api/Products/5

@@ -32,15 +32,37 @@ namespace WebApi.Models
         {
             return this.GetProducts().SingleOrDefault(x => x.ProductID == id);
         }
-        public void Put(Product product)
+        public void Put(ProductDto dto)
         {
+
+            var product = db.Products.FirstOrDefault(x=> x.ProductID == dto.ProductID);
+            if (product != null)
+            {
+                product.ProductName = dto.ProductName;
+                product.QuantityPerUnit = dto.QuantityPerUnit;
+                product.UnitPrice = dto.UnitPrice; 
+                product.ReorderLevel = dto.ReorderLevel;
+                product.UnitsInStock = dto.UnitsInStock;
+                product.UnitsOnOrder = dto.UnitsOnOrder;
+                product.Discontinued = dto.Discontinued;
+            }
             db.Entry(product).State = EntityState.Modified;
             db.SaveChangesAsync();
         }
-        public void Post(Product product)
+        public void Post(ref ProductDto dto)
         {
+            var product = new Product();
+            product.ProductID = db.Products.Max(x => x.ProductID)+1;
+            product.ProductName = dto.ProductName;
+            product.QuantityPerUnit = dto.QuantityPerUnit;
+            product.UnitPrice = dto.UnitPrice;
+            product.ReorderLevel = dto.ReorderLevel;
+            product.UnitsInStock = dto.UnitsInStock;
+            product.UnitsOnOrder = dto.UnitsOnOrder;
+            product.Discontinued = dto.Discontinued;
             db.Products.Add(product);
             db.SaveChangesAsync();
+            dto.ProductID = product.ProductID;
         }
         public void Delete(int id)
         {

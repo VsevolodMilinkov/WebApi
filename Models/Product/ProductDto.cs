@@ -2,7 +2,7 @@
 {
     public class ProductDto
     {
-        public int ProductID;
+        public int? ProductID;
         public string ProductName;
         public string QuantityPerUnit;
         public decimal? UnitPrice;
@@ -10,6 +10,5 @@
         public short? UnitsOnOrder;
         public short? ReorderLevel;
         public bool Discontinued;
-             
     }
 }

@@ -1,101 +1,51 @@
 ﻿@section scripts{
     @Scripts.Render("~/bundles/app")
 }
-<div class="alert alert-danger alert-dismissible" role="alert" data-bind="visible: error">
+<div class="alert alert-danger alert-dismissible fixed-top"
+     role="alert" 
+     data-bind="visible: error">
     <p data-bind="text: error"></p>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="alert alert-success alert-dismissible" role="alert" data-bind="visible: success">
+<div class="alert alert-success alert-dismissible fixed-top" 
+     role="alert" 
+     data-bind="visible: success">
     <p data-bind="text: success"></p>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<!-- ko if:productInfo() -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form class="form-horizontal" data-bind="submit: editProduct">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel" data-bind="text: panelTitle">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
 
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="inputProductName">Название</label>
-                        <input class="form-control col-md-6 form-control-sm" id="inputProductName" data-bind="value: productInfo().ProductName" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="inputQuantityPerUnit">Кол-во единиц товара в партии</label>
-                        <input class="form-control col-md-6 form-control-sm" id="inputQuantityPerUnit" data-bind="value:productInfo().QuantityPerUnit" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="inputUnitPrice">Цена (парт.)</label>
-                        <input type="number" class="form-control col-md-6 form-control-sm" id="inputUnitPrice" data-bind="value: productInfo().UnitPrice" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="inputUnitsInStock">Кол-во партий товара на складе</label>
-                        <input type="number" class="form-control col-md-6 form-control-sm" id="inputUnitsInStock" data-bind="value: productInfo().UnitsInStock" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="inputUnitsOnOrder">Кол-во заказанных партий товара</label>
-                        <input type="number" class="form-control col-md-6 form-control-sm" id="inputUnitsOnOrder" data-bind="value: productInfo().UnitsOnOrder" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="inputReorderLevel">Уровень дозакупки товара (в парт.)</label>
-                        <input class="form-control col-md-6 form-control-sm" id="inputReorderLevel" data-bind="value: productInfo().ReorderLevel" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="inputDiscontinued">Снят с производства?</label>
-                        <input type="checkbox" class="form-control col-md-6 form-control-sm" id="inputDiscontinued" data-bind="checked: productInfo().Discontinued" />
-                    </div>
 
+<div class="row">
+    <div class="col-md-6">
+        <div class="collapse navbar-collapse">
+            <span class="navbar-brand">ID</span>
+            <form class="navbar-form navbar-left" data-bind="submit: GetProduct">
+                <div class="form-group">
+                    <input data-bind="value: filterProductID" type="number" class="form-control" size="5">
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" data-bind="text: panelButton"></button>
-                </div>
+                <button type="submit" class="btn btn-default">Найти товар по ID</button>
             </form>
         </div>
-    </div>
-</div>
-<!-- /ko -->
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default">Добавить товар</button>
-                    <button type="button" class="btn btn-default">Найти</button>
-                </div>
+        <div class="card card-default">
+            <div class="card-header text-center">
+                <span class="h2 float-left">Товары</span>
+                <div class="spinner-border float-right" id="productTableSpinner"></div>
             </div>
-            <div class="panel-body">
-                <form class="form-inline" data-bind="submit: getProduct">
-                    <label for="inputProductId">ID</label>
-                    <input id="inputProductId" type="number" size="5" />
-                    <button type="submit">Найти товар по ID</button>
-                </form>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h2 class="panel-title">
-                    Товары
-                </h2>
-                <div class="spinner-border"></div>
-            </div>
-            <div class="panel-body">
-                <table class="table table-striped">
-                    <thead>
+            <div class="card-body">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="thead-light">
                         <tr>
                             <td>ID</td>
                             <td>Название</td>
                             <td>Кол-во единиц товара в партии</td>
-                            <td>Цена (шт.)</td>
+                            <td>Цена (парт.)</td>
+                            <td colspan="2" class="text-center">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productDetailModal" data-bind="click: AddProductInit">Добавить</button>
+                            </td>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: products">
@@ -104,16 +54,71 @@
                             <td><strong><span data-bind="text: ProductName"></span></strong></td>
                             <td><span data-bind="text: QuantityPerUnit"></span></td>
                             <td>$<span data-bind="text: UnitPrice"></span></td>
-                            <td><button title="Редактировать" data-bind="click: $parent.initEditProduct" data-toggle="modal" data-target="#exampleModal"><span class="glyphicon glyphicon-pencil"></span></button></td>
-                            <td><button title="Удалить" data-bind="click: $parent.deleteProduct"><span class="glyphicon glyphicon-remove"></span></button></td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#productDetailModal" data-bind="click: $parent.EditProductInit">
+                                        Редактировать
+                                    </button>
+                                    <button class="btn btn-danger" data-bind="click: $parent.DeleteProduct" type="button">
+                                        &times;
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="productDetailModalLabel" data-bind="text: modalTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input @*hidden*@ @*data-bind="value: productInfo().ProductID"*@ id="ProductID">
+                        <div class="row">
+                            <label class="control-label col-md-4" for="ProductName">Название</label>
+                            <input class="form-control col-md-6 form-control-sm" id="ProductName" @*data-bind="value: productInfo().ProductName"*@ />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="QuantityPerUnit">Кол-во единиц товара в партии</label>
+                            <input class="form-control col-md-6 form-control-sm" id="QuantityPerUnit" @*data-bind="value:productInfo().QuantityPerUnit"*@ />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="UnitPrice">Цена (парт.)</label>
+                            <input type="number" class="form-control col-md-6 form-control-sm" id="UnitPrice" @*data-bind="value: productInfo().UnitPrice"*@ />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="UnitsInStock">Кол-во партий товара на складе</label>
+                            <input type="number" class="form-control col-md-6 form-control-sm" id="UnitsInStock" @*data-bind="value: productInfo().UnitsInStock"*@ />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="UnitsOnOrder">Кол-во заказанных партий товара</label>
+                            <input type="number" class="form-control col-md-6 form-control-sm" id="UnitsOnOrder" @*data-bind="value: productInfo().UnitsOnOrder"*@ />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="ReorderLevel">Уровень дозакупки товара (в парт.)</label>
+                            <input type="number" class="form-control col-md-6 form-control-sm" id="ReorderLevel" @*data-bind="value: productInfo().ReorderLevel"*@ />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="Discontinued">Снят с производства?</label>
+                            <input type="checkbox" class="form-control col-md-6 form-control-sm" id="Discontinued" @*data-bind="checked: productInfo().Discontinued"*@ />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-bind="text: modalButton, click: $('#productDetailModal #ProductID').val()!='' ? EditProduct : AddProduct" data-toggle="modal" data-target="#productDetailModal"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+
     </div>
 </div>
 
-<div class="row">
 
-</div>

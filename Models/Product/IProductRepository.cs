@@ -6,8 +6,8 @@ namespace WebApi.Models
     {
         IQueryable<ProductDto> GetProducts();
         ProductDto GetProduct(int id);
-        void Put(Product product);
-        void Post(Product product);
+        void Put(ProductDto product);
+        void Post(ref ProductDto product);
         void Delete(int id);
         bool ProductExists(int id);
     }
