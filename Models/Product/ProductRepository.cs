@@ -8,7 +8,8 @@ namespace WebApi.Models
     public class ProductRepository : IProductRepository
     {
         private NorthwindEntities db;
-        public ProductRepository(NorthwindEntities context) {
+        public ProductRepository(NorthwindEntities context)
+        {
             db = context;
         }
         public IQueryable<ProductDto> GetProducts()

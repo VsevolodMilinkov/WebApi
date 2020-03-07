@@ -1,11 +1,11 @@
-using Ninject;
-using Ninject.Modules;
-using Ninject.Web.Mvc;
+using Autofac;
+using Autofac.Integration.WebApi;
+using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using WebApi.Util;
+using WebApi.Models;
 
 namespace WebApi
 {
@@ -20,9 +20,15 @@ namespace WebApi
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             HttpConfiguration config = GlobalConfiguration.Configuration;
 
-            NinjectModule registrations = new NinjectRegistrations();
-            var kernel = new StandardKernel(registrations);
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+            // Autofac configuration
+            var builder = new ContainerBuilder();
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+            var dbContext = new NorthwindEntities();
+            builder.RegisterType<ProductRepository>().As<IProductRepository>().WithParameter("context", dbContext);
+            builder.RegisterWebApiFilterProvider(config);
+            builder.RegisterWebApiModelBinderProvider();
+            var container = builder.Build();
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
         }
     }
 }
