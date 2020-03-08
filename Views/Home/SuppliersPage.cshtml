@@ -1,0 +1,101 @@
+﻿
+    <div class="col-md-6">
+
+        @* поле фильтрации таблицы поставщиков по ID *@
+        <form class="form-inline" data-bind="submit: GetSupplier">
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="filterSupplierID">ID</label>
+                <input data-bind="value: filterSupplierID" type="number" id="filterSupplierID">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Найти поставщика по ID</button>
+        </form>
+        @* таблица поставщиков *@
+        <div class="card card-default">
+            <div class="card-header text-center">
+                <span class="h2 float-left">Поставщики</span>
+                <div class="spinner-border float-right" id="supplierTableSpinner"></div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <td>ID</td>
+                            <td>Название компании</td>
+                            <td>Контактное лицо</td>
+                            <td>Должность контактного лица</td>
+                            <td>Город</td>
+                            <td>Страна</td>
+
+                            <td colspan="2" class="text-center">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#supplierDetailModal" data-bind="click: AddSupplierInit">Добавить</button>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: suppliers">
+                        <tr>
+                            <td><span data-bind="text: SupplierID"></span></td>
+                            <td><strong><span data-bind="text: CompanyName"></span></strong></td>
+                            <td><span data-bind="text: ContactName"></span></td>
+                            <td><span data-bind="text: ContactTitle"></span></td>
+                            <td><span data-bind="text: City"></span></td>
+                            <td><span data-bind="text: Country"></span></td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#supplierDetailModal" data-bind="click: $parent.EditSupplierInit">
+                                        Редактировать
+                                    </button>
+                                    <button class="btn btn-danger" data-bind="click: $parent.DeleteSupplier" type="button">
+                                        &times;
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        @* Модальное окно для доавбления/редактирования поставщика *@
+        <div class="modal fade" id="supplierDetailModal" tabindex="-1" role="dialog" aria-labelledby="supplierDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="supplierDetailModalLabel" data-bind="text: supplierModalTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input hidden id="SupplierID">
+                        <div class="row">
+                            <label class="control-label col-md-4" for="CompanyName">Название</label>
+                            <input class="form-control col-md-6 form-control-sm" id="CompanyName" />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="ContactName">Контактное лицо</label>
+                            <input class="form-control col-md-6 form-control-sm" id="ContactName" />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="ContactTitle">Должность контактного лица</label>
+                            <input class="form-control col-md-6 form-control-sm" id="ContactTitle" />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="City">Город</label>
+                            <input class="form-control col-md-6 form-control-sm" id="City" />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="Country">Страна</label>
+                            <input class="form-control col-md-6 form-control-sm" id="Country" />
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-4" for="HomePage">Сайт</label>
+                            <input class="form-control col-md-6 form-control-sm" id="HomePage" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-bind="text: supplierModalButton, click: $('#supplierDetailModal #SupplierID').val()!='' ? EditSupplier : AddSupplier" data-toggle="modal" data-target="#supplierDetailModal"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+﻿using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.Models;
@@ -15,50 +9,48 @@ namespace WebApi.Controllers
 {
     public class SuppliersController : ApiController
     {
-        private NorthwindEntities db = new NorthwindEntities();
-
-        // GET: api/Suppliers
-        public IQueryable<Supplier> GetSuppliers()
+        private readonly ISupplierRepository repo;
+        public SuppliersController(ISupplierRepository r)
         {
-            return db.Suppliers;
+            this.repo = r;
+        }
+
+        public IQueryable<SupplierDto> Get()
+        {
+            return repo.GetSuppliers();
         }
 
         // GET: api/Suppliers/5
-        [ResponseType(typeof(Supplier))]
-        public async Task<IHttpActionResult> GetSupplier(int id)
+        [ResponseType(typeof(SupplierDto))]
+        public IHttpActionResult Get(int id)
         {
-            Supplier supplier = await db.Suppliers.FindAsync(id);
-            if (supplier == null)
+            var dto = repo.GetSupplier(id);
+            if (dto == null)
             {
                 return NotFound();
             }
-
-            return Ok(supplier);
+            return Ok(dto);
         }
 
         // PUT: api/Suppliers/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutSupplier(int id, Supplier supplier)
+        public IHttpActionResult Put(int id, SupplierDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != supplier.SupplierID)
+            if (id != dto.SupplierID)
             {
                 return BadRequest();
             }
-
-            db.Entry(supplier).State = EntityState.Modified;
-
             try
             {
-                await db.SaveChangesAsync();
+                repo.Put(dto);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SupplierExists(id))
+                if (!repo.SupplierExists(id))
                 {
                     return NotFound();
                 }
@@ -72,48 +64,25 @@ namespace WebApi.Controllers
         }
 
         // POST: api/Suppliers
-        [ResponseType(typeof(Supplier))]
-        public async Task<IHttpActionResult> PostSupplier(Supplier supplier)
+        [ResponseType(typeof(SupplierDto))]
+        public IHttpActionResult Post(SupplierDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            repo.Post(ref dto);
 
-            db.Suppliers.Add(supplier);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = supplier.SupplierID }, supplier);
+            return CreatedAtRoute("DefaultApi", new { id = dto.SupplierID }, dto);
         }
 
         // DELETE: api/Suppliers/5
         [ResponseType(typeof(Supplier))]
-        public async Task<IHttpActionResult> DeleteSupplier(int id)
+        public IHttpActionResult Delete(int id)
         {
-            Supplier supplier = await db.Suppliers.FindAsync(id);
-            if (supplier == null)
-            {
-                return NotFound();
-            }
-
-            db.Suppliers.Remove(supplier);
-            await db.SaveChangesAsync();
-
-            return Ok(supplier);
+            repo.Delete(id);
+            return Ok(id);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool SupplierExists(int id)
-        {
-            return db.Suppliers.Count(e => e.SupplierID == id) > 0;
-        }
     }
 }

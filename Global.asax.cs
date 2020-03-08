@@ -23,8 +23,9 @@ namespace WebApi
             // Autofac configuration
             var builder = new ContainerBuilder();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-            var dbContext = new NorthwindEntities();
-            builder.RegisterType<ProductRepository>().As<IProductRepository>().WithParameter("context", dbContext);
+            
+            builder.RegisterType<ProductRepository>().As<IProductRepository>().WithParameter("context", new NorthwindEntities());
+            builder.RegisterType<SupplierRepository>().As<ISupplierRepository>().WithParameter("context", new NorthwindEntities());
             builder.RegisterWebApiFilterProvider(config);
             builder.RegisterWebApiModelBinderProvider();
             var container = builder.Build();

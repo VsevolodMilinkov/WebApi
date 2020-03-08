@@ -244,11 +244,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Models\Product\IProductRepository.cs" />
     <Compile Include="Models\Product\ProductRepository.cs" />
-    <Compile Include="Controllers\Order_DetailsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -301,6 +299,8 @@
     <Compile Include="Models\Supplier.cs">
       <DependentUpon>NorthwindModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Supplier\ISupplierRepository.cs" />
+    <Compile Include="Models\Supplier\SupplierDto.cs" />
     <Compile Include="Models\Supplier\SupplierRepository.cs" />
     <Compile Include="Models\Territory.cs">
       <DependentUpon>NorthwindModel.tt</DependentUpon>
@@ -480,6 +480,8 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Home\SuppliersPage.cshtml" />
+    <Content Include="Views\Home\ProductsPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

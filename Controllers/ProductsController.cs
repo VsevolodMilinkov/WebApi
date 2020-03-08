@@ -24,29 +24,29 @@ namespace WebApi.Controllers
         [ResponseType(typeof(ProductDto))]
         public IHttpActionResult Get(int id)
         {
-            var product = repo.GetProduct(id);
-            if (product == null)
+            var dto = repo.GetProduct(id);
+            if (dto == null)
             {
                 return NotFound();
             }
-            return Ok(product);
+            return Ok(dto);
         }
 
         // PUT: api/Products/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult Put(int id, ProductDto product)
+        public IHttpActionResult Put(int id, ProductDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (id != product.ProductID)
+            if (id != dto.ProductID)
             {
                 return BadRequest();
             }
             try
             {
-               repo.Put(product);               
+               repo.Put(dto);               
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -65,15 +65,15 @@ namespace WebApi.Controllers
 
         // POST: api/Products
         [ResponseType(typeof(ProductDto))]
-        public IHttpActionResult Post(ProductDto product)
+        public IHttpActionResult Post(ProductDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            repo.Post(ref product);
+            repo.Post(ref dto);
 
-            return CreatedAtRoute("DefaultApi", new { id = product.ProductID }, product);
+            return CreatedAtRoute("DefaultApi", new { id = dto.ProductID }, dto);
         }
 
         // DELETE: api/Products/5
